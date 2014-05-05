@@ -29,8 +29,8 @@ class Hero extends FlxSprite {
 		}
 	}
 
-	public function setTarget(newX : Float, newY: Float) {
-		targetX = newX;
-		targetY = newY;
+	public function setTarget(newTarget : Vector2) {
+		targetX = newTarget.x;
+		targetY = newTarget.y;
 	}
 }
