@@ -1,36 +1,50 @@
 package;
 
-import flixel.*;
+import flixel.FlxSprite;
+import flixel.util.FlxColor;
+import flixel.FlxG;
 
 class Hero extends FlxSprite {
-	private var targetX : Float;
-	private var targetY : Float;
+	public var currentMesh : Int;
+	public var targets : Array<Path> = new Array<Path>();
 
 	public function new() {
-		super(100, 100);
-		targetX = 100;
-		targetY = 100;
-		makeGraphic(40, 40);
+		super(0, 0);
+		makeGraphic(40, 40, FlxColor.BLUE);
 	}
 
 	override public function update() {
 		var speed : Float = 50.0;
-		if(x < targetX) {
+		var currentTarget = targets[0].target;
+		if(currentTarget != null) {
+		currentMesh = targets[0].current;
+		if(x < currentTarget.x) {
 			x += speed * FlxG.elapsed;
 		}
-		if(x > targetX) {
+		if(x > currentTarget.x) {
 			x -= speed * FlxG.elapsed;
 		}
-		if(y < targetY) {
+		if(y < currentTarget.y) {
 			y += speed * FlxG.elapsed;
 		}
-		if(y > targetY) {
+		if(y > currentTarget.y) {
 			y -= speed * FlxG.elapsed;
+		}
+
+		if((Math.abs(x - currentTarget.x) < 0.5) &&
+			(Math.abs(x - currentTarget.x) < 0.5)) {
+			x = currentTarget.x;
+			y = currentTarget.y;
+			targets.shift();
+		}
 		}
 	}
 
-	public function setTarget(newTarget : Vector2) {
-		targetX = newTarget.x;
-		targetY = newTarget.y;
+	public function clearTargets() : Void {
+		targets = new Array<Path>();
+	}
+
+	public function addTarget(newPath : Path) : Void {
+		targets.push(newPath);
 	}
 }
