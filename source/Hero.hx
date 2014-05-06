@@ -5,8 +5,9 @@ import flixel.util.FlxColor;
 import flixel.FlxG;
 
 class Hero extends FlxSprite {
-	public var currentMesh : Int;
-	public var targets : Array<Path> = new Array<Path>();
+	public var currentMesh : NavMesh;
+	public var targets : Array<Vector2> = new Array<Vector2>();
+	public var targetMeshes : Array<NavMesh> = new Array<NavMesh>();
 
 	public function new() {
 		super(0, 0);
@@ -15,36 +16,42 @@ class Hero extends FlxSprite {
 
 	override public function update() {
 		var speed : Float = 50.0;
-		var currentTarget = targets[0].target;
+		var currentTarget = targets[0];
 		if(currentTarget != null) {
-		currentMesh = targets[0].current;
-		if(x < currentTarget.x) {
-			x += speed * FlxG.elapsed;
-		}
-		if(x > currentTarget.x) {
-			x -= speed * FlxG.elapsed;
-		}
-		if(y < currentTarget.y) {
-			y += speed * FlxG.elapsed;
-		}
-		if(y > currentTarget.y) {
-			y -= speed * FlxG.elapsed;
-		}
+			if(x < currentTarget.x) {
+				x += speed * FlxG.elapsed;
+			}
+			if(x > currentTarget.x) {
+				x -= speed * FlxG.elapsed;
+			}
+			if(y < currentTarget.y) {
+				y += speed * FlxG.elapsed;
+			}
+			if(y > currentTarget.y) {
+				y -= speed * FlxG.elapsed;
+			}
 
-		if((Math.abs(x - currentTarget.x) < 0.5) &&
-			(Math.abs(x - currentTarget.x) < 0.5)) {
-			x = currentTarget.x;
-			y = currentTarget.y;
-			targets.shift();
-		}
+			if((Math.abs(x - currentTarget.x) < 1) &&
+				(Math.abs(y - currentTarget.y) < 1)) {
+				trace("hit target");
+				x = currentTarget.x;
+				y = currentTarget.y;
+				targets.shift();
+				targetMeshes.shift();
+				if(targetMeshes[0] != null) {
+					currentMesh = targetMeshes[0];
+				}
+			}
 		}
 	}
 
 	public function clearTargets() : Void {
-		targets = new Array<Path>();
+		targets = new Array<Vector2>();
+		targetMeshes = new Array<NavMesh>();
 	}
 
-	public function addTarget(newPath : Path) : Void {
-		targets.push(newPath);
+	public function addTarget(newMesh : NavMesh, newTarget : Vector2) : Void {
+		targets.push(newTarget);
+		targetMeshes.push(newMesh);
 	}
 }

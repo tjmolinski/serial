@@ -11,6 +11,10 @@ class NavMesh extends FlxObject {
 	public var canvas : Graphics;
 	public var shape : Shape;
 	public var neighbors : Map<NavMesh, Vector2> = new Map<NavMesh, Vector2>();
+	public var listOfNeighbors : Array<Int> = new Array<Int>();
+	public var parent : NavMesh = null;
+	public var visited : Bool = false;
+	public var flowNumber : Int = -1;
 
 	public function new(newPoints : Array<Vector2>) {
 		super();
@@ -27,8 +31,9 @@ class NavMesh extends FlxObject {
 		flash.Lib.current.addChild(shape);
 	}
 
-	public function addNeighbor(neighbor : NavMesh, bridge : Vector2) {
+	public function addNeighbor(neighbor : NavMesh, bridge : Vector2, idx : Int) {
 		neighbors.set(neighbor, bridge);
+		listOfNeighbors.push(idx);
 	}
 
 	public function isConcave() : Bool {
