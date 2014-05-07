@@ -9,9 +9,9 @@ class Hero extends FlxSprite {
 	public var targets : Array<Vector2> = new Array<Vector2>();
 	public var targetMeshes : Array<NavMesh> = new Array<NavMesh>();
 
-	public function new() {
-		super(0, 0);
-		makeGraphic(40, 40, FlxColor.BLUE);
+	public function new(newX : Int, newY : Int) {
+		super(newX, newY);
+		makeGraphic(20, 20, FlxColor.BLUE);
 	}
 
 	override public function update() {

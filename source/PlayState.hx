@@ -12,6 +12,7 @@ class PlayState extends FlxState
 {
 
 	var hero : Hero;
+	var house : House;
 	var meshMap : Array<NavMesh>;
 
 	override public function create():Void
@@ -19,33 +20,27 @@ class PlayState extends FlxState
 		meshMap = new Array<NavMesh>();
 
 		var points = new Array<Vector2>();
-		points.push(new Vector2(10, 10));
-		points.push(new Vector2(400, 10));
-		points.push(new Vector2(400, 400));
-		points.push(new Vector2(10, 400));
+		points.push(new Vector2(10, 190));
+		points.push(new Vector2(500, 190));
+		points.push(new Vector2(500, 230));
+		points.push(new Vector2(10, 230));
 		meshMap.push(new NavMesh(points));
 
 		points = new Array<Vector2>();
-		points.push(new Vector2(10, 410));
-		points.push(new Vector2(90, 410));
-		points.push(new Vector2(90, 470));
-		points.push(new Vector2(10, 470));
+		points.push(new Vector2(510, 190));
+		points.push(new Vector2(620, 190));
+		points.push(new Vector2(620, 400));
+		points.push(new Vector2(510, 400));
 		meshMap.push(new NavMesh(points));
 
-		points = new Array<Vector2>();
-		points.push(new Vector2(410, 10));
-		points.push(new Vector2(500, 10));
-		points.push(new Vector2(500, 300));
-		points.push(new Vector2(410, 300));
-		meshMap.push(new NavMesh(points));
+		meshMap[0].addNeighbor(meshMap[1], new Vector2(505, 210), 1);
+		meshMap[1].addNeighbor(meshMap[0], new Vector2(505, 210), 0);
 
-		meshMap[0].addNeighbor(meshMap[1], new Vector2(50, 405), 1);
-		meshMap[1].addNeighbor(meshMap[0], new Vector2(50, 405), 0);
-		meshMap[0].addNeighbor(meshMap[2], new Vector2(405, 155), 2);
-		meshMap[2].addNeighbor(meshMap[0], new Vector2(405, 155), 0);
-
-		hero = new Hero();
-		hero.currentMesh = meshMap[0];
+		house = new House(-70, -80);
+		add(house);
+		
+		hero = new Hero(550, 350);
+		hero.currentMesh = meshMap[1];
 		add(hero);
 
 		super.create();
@@ -98,6 +93,7 @@ class PlayState extends FlxState
 	override public function update():Void
 	{
 		if(FlxG.mouse.justPressed) {
+			trace("X:" + FlxG.mouse.screenX + ", Y:" + FlxG.mouse.screenY);
 			var mouseVec = new Vector2(FlxG.mouse.screenX, FlxG.mouse.screenY);
 			hero.clearTargets();
 			var desiredMesh : NavMesh = findNavMesh(mouseVec);

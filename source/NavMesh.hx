@@ -22,7 +22,7 @@ class NavMesh extends FlxObject {
 		shape = new Shape();
 		canvas = shape.graphics;
 
-		canvas.beginFill(0xFF0000, 0.5);
+		canvas.beginFill(0xFF0000, 0.2);
 		canvas.moveTo(points[0].x, points[0].y);
 		for(i in 0...(points.length)) {
 			canvas.lineTo(points[i].x, points[i].y);
