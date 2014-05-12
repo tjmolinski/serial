@@ -9,7 +9,7 @@ class House extends FlxSprite {
 
 	public function new(newX : Int, newY : Int) {
 		super(newX, newY);
-		loadGraphic("assets/images/HouseShell.png");
+		loadGraphic("images/HouseShell.png");
 		scale.set(0.5, 0.5);
 	}
 
@@ -21,7 +21,7 @@ class House extends FlxSprite {
 			brokenInto = !brokenInto;
 		}
 		if(brokenInto) {
-			loadGraphic("assets/images/HouseEmpty.png");
+			loadGraphic("images/HouseEmpty.png");
 		}
 	}
 }

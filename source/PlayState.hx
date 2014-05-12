@@ -39,7 +39,7 @@ class PlayState extends FlxState
 		house = new House(-70, -80);
 		add(house);
 		
-		hero = new Hero(550, 350);
+		hero = new Hero(550, 370);
 		hero.currentMesh = meshMap[1];
 		add(hero);
 
@@ -93,7 +93,7 @@ class PlayState extends FlxState
 	override public function update():Void
 	{
 		if(FlxG.mouse.justPressed) {
-			trace("X:" + FlxG.mouse.screenX + ", Y:" + FlxG.mouse.screenY);
+			//trace("X:" + FlxG.mouse.screenX + ", Y:" + FlxG.mouse.screenY);
 			var mouseVec = new Vector2(FlxG.mouse.screenX, FlxG.mouse.screenY);
 			hero.clearTargets();
 			var desiredMesh : NavMesh = findNavMesh(mouseVec);
