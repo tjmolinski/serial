@@ -1,29 +1,39 @@
 package;
 
-import flixel.FlxG;
-import flixel.FlxSprite;
-import flixel.FlxState;
-import flixel.text.FlxText;
-import flixel.ui.FlxButton;
-import flixel.util.FlxMath;
-import flixel.input.mouse.FlxMouse;
+import flixel.*;
+import flixel.plugin.MouseEventManager;
 
 class PlayState extends FlxState
 {
 
 	var hero : Hero;
 	var house : House;
+	var breakInto : Interactable;
 	var meshMap : Array<NavMesh>;
+
+
+	public function addHouseNav() : Void {
+		var points = new Array<Vector2>();
+		points.push(new Vector2(50, 190));
+		points.push(new Vector2(210, 190));
+		points.push(new Vector2(210, 220));
+		points.push(new Vector2(50, 220));
+		meshMap.push(new NavMesh(points));
+		meshMap[0].addNeighbor(meshMap[2], new Vector2(210, 210), 1);
+		meshMap[2].addNeighbor(meshMap[0], new Vector2(210, 210), 1);
+	}
 
 	override public function create():Void
 	{
+		FlxG.debugger.visible = true;
+		FlxG.plugins.add(new MouseEventManager());
 		meshMap = new Array<NavMesh>();
 
 		var points = new Array<Vector2>();
-		points.push(new Vector2(10, 190));
+		points.push(new Vector2(210, 190));
 		points.push(new Vector2(500, 190));
-		points.push(new Vector2(500, 230));
-		points.push(new Vector2(10, 230));
+		points.push(new Vector2(500, 220));
+		points.push(new Vector2(210, 220));
 		meshMap.push(new NavMesh(points));
 
 		points = new Array<Vector2>();
@@ -43,7 +53,16 @@ class PlayState extends FlxState
 		hero.currentMesh = meshMap[1];
 		add(hero);
 
+		breakInto = new Interactable(210, 150, onBreakIntoClick);
+		add(breakInto);
+
 		super.create();
+	}
+
+	private function onBreakIntoClick() : Void {
+		house.breakInto();
+		addHouseNav();
+		breakInto.kill();
 	}
 	
 	override public function destroy():Void
@@ -90,8 +109,23 @@ class PlayState extends FlxState
 		}
 	}
 
+	public function getDistance(P1X : Float, P1Y : Float,  P2X : Float, P2Y : Float) : Float {
+		var XX : Float = P2X - P1X;
+		var YY : Float = P2Y - P1Y;
+		return Math.sqrt( XX * XX + YY * YY );
+	}
+
 	override public function update():Void
 	{
+		//trace(getDistance(breakInto.x, breakInto.y, hero.x, hero.y));
+		if(!house.brokenInto) {
+			if(getDistance(breakInto.x, breakInto.y, hero.x, hero.y) < 80.0) {
+				breakInto.revive();
+			} else {
+				breakInto.kill();
+			}
+		}
+
 		if(FlxG.mouse.justPressed) {
 			//trace("X:" + FlxG.mouse.screenX + ", Y:" + FlxG.mouse.screenY);
 			var mouseVec = new Vector2(FlxG.mouse.screenX, FlxG.mouse.screenY);
