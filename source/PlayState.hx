@@ -1,6 +1,8 @@
 package;
 
 import flixel.*;
+import flixel.text.FlxText;
+import flixel.util.*;
 import flixel.plugin.MouseEventManager;
 
 class PlayState extends FlxState
@@ -10,18 +12,7 @@ class PlayState extends FlxState
 	var house : House;
 	var breakInto : Interactable;
 	var meshMap : Array<NavMesh>;
-
-
-	public function addHouseNav() : Void {
-		var points = new Array<Vector2>();
-		points.push(new Vector2(50, 190));
-		points.push(new Vector2(210, 190));
-		points.push(new Vector2(210, 220));
-		points.push(new Vector2(50, 220));
-		meshMap.push(new NavMesh(points));
-		meshMap[0].addNeighbor(meshMap[2], new Vector2(210, 210), 1);
-		meshMap[2].addNeighbor(meshMap[0], new Vector2(210, 210), 1);
-	}
+	var objective : FlxText;
 
 	override public function create():Void
 	{
@@ -56,6 +47,10 @@ class PlayState extends FlxState
 		breakInto = new Interactable(210, 150, onBreakIntoClick);
 		add(breakInto);
 
+		objective = new FlxText((FlxG.width/2)-50, FlxG.height - 20, 300, "Break Into The House");
+		objective.setFormat(null, 12, FlxColor.WHITE, "left", 1, FlxColor.BLACK);
+		add(objective);
+
 		super.create();
 	}
 
@@ -63,13 +58,20 @@ class PlayState extends FlxState
 		house.breakInto();
 		addHouseNav();
 		breakInto.kill();
-	}
-	
-	override public function destroy():Void
-	{
-		super.destroy();
+		objective.setFormat(null, 12, FlxColor.RED, "left", 2, FlxColor.BLACK);
 	}
 
+	public function addHouseNav() : Void {
+		var points = new Array<Vector2>();
+		points.push(new Vector2(50, 190));
+		points.push(new Vector2(210, 190));
+		points.push(new Vector2(210, 220));
+		points.push(new Vector2(50, 220));
+		meshMap.push(new NavMesh(points));
+		meshMap[0].addNeighbor(meshMap[2], new Vector2(210, 210), 1);
+		meshMap[2].addNeighbor(meshMap[0], new Vector2(210, 210), 1);
+	}
+	
 	public function findNavMesh(coord : Vector2) : NavMesh {
 		for(i in 0...meshMap.length) {
 			if(meshMap[i].isInside(coord)) {
