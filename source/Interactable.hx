@@ -9,9 +9,9 @@ class Interactable extends FlxSprite {
 
 	private var callback : Dynamic;
 
-	public function new(newX : Int, newY : Int, cb : Dynamic) {
+	public function new(asset : String, newX : Int, newY : Int, cb : Dynamic) {
 		super(newX, newY);
-		loadGraphic("images/Interactable.png");
+		loadGraphic(asset);
 		callback = cb;
 		scale.set(0.1, 0.1);
 		updateHitbox();

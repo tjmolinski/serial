@@ -11,6 +11,7 @@ class PlayState extends FlxState
 	var hero : Hero;
 	var house : House;
 	var breakInto : Interactable;
+	var door : Interactable;
 	var meshMap : Array<NavMesh>;
 	var objective : FlxText;
 
@@ -44,8 +45,10 @@ class PlayState extends FlxState
 		hero.currentMesh = meshMap[1];
 		add(hero);
 
-		breakInto = new Interactable(210, 150, onBreakIntoClick);
+		breakInto = new Interactable("images/Interactable.png", 210, 150, onBreakIntoClick);
 		add(breakInto);
+		door = new Interactable("images/door.png", 125, 125, onEnterDoorway);
+		add(door);
 
 		objective = new FlxText((FlxG.width/2)-50, FlxG.height - 20, 300, "Break Into The House");
 		objective.setFormat(null, 12, FlxColor.WHITE, "left", 1, FlxColor.BLACK);
@@ -59,6 +62,10 @@ class PlayState extends FlxState
 		addHouseNav();
 		breakInto.kill();
 		objective.setFormat(null, 12, FlxColor.RED, "left", 2, FlxColor.BLACK);
+	}
+
+	private function onEnterDoorway() : Void {
+		house.enterDoor();
 	}
 
 	public function addHouseNav() : Void {
@@ -126,6 +133,11 @@ class PlayState extends FlxState
 			} else {
 				breakInto.kill();
 			}
+		}
+		if(getDistance(door.x, door.y, hero.x, hero.y) < 75.0) {
+			door.revive();
+		} else {
+			door.kill();
 		}
 
 		if(FlxG.mouse.justPressed) {

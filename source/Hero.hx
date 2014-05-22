@@ -47,9 +47,43 @@ class Hero extends FlxSprite {
 		}
 	}
 
+	/*
+	 * HACK!!!!
+	 * TODO: Remove for better functionality
+	 */
+	var dblClick : Bool = false;
+	var clickDelay : Float = 1;
+	var doubleClickPeriod : Float = 0.15;
+	private function checkDoubleClick() : Void {
+		clickDelay += FlxG.elapsed;
+		if(FlxG.mouse.justPressed) {
+			if(clickDelay < doubleClickPeriod) {
+				dblClick = true;
+			} else {
+				dblClick = false;
+				clickDelay = 0;
+			}
+		}
+	}
+
 	override public function update() {
-		var speed : Float = 50.0;
+		var speed : Float;
+		var walk : Float = 35.0;
+		var sneak : Float = 20.0;
+		var run : Float = 75.0;
 		var currentTarget = targets[0];
+
+		checkDoubleClick();
+
+		if(dblClick) {
+			speed = run;
+		} else if(FlxG.mouse.pressed) {
+			dblClick = false;
+			speed = sneak;
+		} else {
+			speed = walk;
+		}
+
 		if(currentTarget != null) {
 			if(x < currentTarget.x) {
 				setAnimation(rightSprite);
@@ -82,6 +116,7 @@ class Hero extends FlxSprite {
 					currentMesh = targetMeshes[0];
 				} else {
 					animation.pause();
+					dblClick = false;
 				}
 			}
 		}

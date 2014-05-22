@@ -5,6 +5,7 @@ import flixel.*;
 class House extends FlxSprite {
 
 	public var brokenInto : Bool = false;
+	var phase : Int = -1;
 
 	public function new(newX : Int, newY : Int) {
 		super(newX, newY);
@@ -13,12 +14,25 @@ class House extends FlxSprite {
 	}
 
 	override public function update() : Void {
-		if(brokenInto) {
-			loadGraphic("images/HouseEmpty.png");
+		if(brokenInto && phase >= 0) {
+			changeInterior();
 		}
 	}
 
 	public function breakInto() : Void {
 		brokenInto = true;
+		phase = 0;
+	}
+
+	public function enterDoor() : Void {
+		phase++;
+		if(phase > 1) {
+			phase = 0;
+		}
+		changeInterior();
+	}
+
+	private function changeInterior() : Void {
+		loadGraphic("images/HousePhase"+phase+".png");
 	}
 }
