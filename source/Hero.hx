@@ -42,7 +42,6 @@ class Hero extends Character {
 		if(dblClick) {
 			speed = run;
 		} else if(FlxG.mouse.pressed) {
-			//targets[targets.length-1] = new Vector2(FlxG.mouse.screenX, FlxG.mouse.screenY);
 			dblClick = false;
 			speed = sneak;
 		} else {

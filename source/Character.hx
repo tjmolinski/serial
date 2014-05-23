@@ -2,7 +2,7 @@ package;
 
 import flixel.*;
 
-class Character extends FlxSprite {
+class Character extends ExtendedSprite {
 	var downSprite : FlxSprite;
 	var upSprite : FlxSprite;
 	var leftSprite : FlxSprite;
@@ -30,6 +30,7 @@ class Character extends FlxSprite {
 		rightSprite.animation.play("test");
 
 		setAnimation(upSprite);
+		animation.pause();
 
 		//TODO: Fix when real art comes
 		//This will cause some weird issues since all sprite sheets are not the same size

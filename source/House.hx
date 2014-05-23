@@ -2,7 +2,7 @@ package;
 
 import flixel.*;
 
-class House extends FlxSprite {
+class House extends ExtendedSprite {
 
 	public var brokenInto : Bool = false;
 	var phase : Int = -1;

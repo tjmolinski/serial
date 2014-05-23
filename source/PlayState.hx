@@ -4,22 +4,25 @@ import flixel.*;
 import flixel.text.FlxText;
 import flixel.util.*;
 import flixel.plugin.MouseEventManager;
+import flixel.group.FlxTypedGroup;
 
 class PlayState extends FlxState
 {
-
 	var hero : Hero;
+	var victim : Victim;
 	var house : House;
 	var breakInto : Interactable;
 	var door : Interactable;
 	var meshMap : Array<NavMesh>;
 	var objective : FlxText;
+	var container : FlxTypedGroup<ExtendedSprite>;
 
 	override public function create():Void
 	{
 		FlxG.debugger.visible = true;
 		FlxG.plugins.add(new MouseEventManager());
 		meshMap = new Array<NavMesh>();
+		container = new FlxTypedGroup<ExtendedSprite>();
 
 		var points = new Array<Vector2>();
 		points.push(new Vector2(210, 190));
@@ -38,17 +41,31 @@ class PlayState extends FlxState
 		meshMap[0].addNeighbor(meshMap[1], new Vector2(505, 210), 1);
 		meshMap[1].addNeighbor(meshMap[0], new Vector2(505, 210), 0);
 
-		house = new House(-70, -80);
-		add(house);
-		
 		hero = new Hero(550, 370);
 		hero.currentMesh = meshMap[1];
-		add(hero);
+		hero.z = -2;
+		container.add(hero);
+
+		victim = new Victim(180, 204);
+		victim.addTarget(new Vector2(80, 203));
+		victim.addTarget(new Vector2(180, 204));
+		victim.z = -1;
+		container.add(victim);
+
+		house = new House(-70, -80);
+		house.z = 5;
+		container.add(house);
 
 		breakInto = new Interactable("images/Interactable.png", 210, 150, onBreakIntoClick);
-		add(breakInto);
+		breakInto.z = -5;
+		container.add(breakInto);
+
 		door = new Interactable("images/door.png", 125, 125, onEnterDoorway);
-		add(door);
+		breakInto.z = 0;
+		container.add(door);
+
+		container.sort(sortByZ);
+		add(container);
 
 		objective = new FlxText((FlxG.width/2)-50, FlxG.height - 20, 300, "Break Into The House");
 		objective.setFormat(null, 12, FlxColor.WHITE, "left", 1, FlxColor.BLACK);
@@ -57,8 +74,14 @@ class PlayState extends FlxState
 		super.create();
 	}
 
+	private function sortByZ(order : Int, sprite1 : ExtendedSprite, sprite2 : ExtendedSprite) : Int {
+		return FlxSort.byValues(order, sprite1.z, sprite2.z);
+	}
+
 	private function onBreakIntoClick() : Void {
 		house.breakInto();
+		house.z = -5;
+		container.sort(sortByZ);
 		addHouseNav();
 		breakInto.kill();
 		objective.setFormat(null, 12, FlxColor.RED, "left", 2, FlxColor.BLACK);

@@ -5,7 +5,7 @@ import flixel.FlxG;
 import flixel.*;
 import flixel.plugin.MouseEventManager;
 
-class Interactable extends FlxSprite {
+class Interactable extends ExtendedSprite {
 
 	private var callback : Dynamic;
 
