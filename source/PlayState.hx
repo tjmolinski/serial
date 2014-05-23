@@ -140,7 +140,7 @@ class PlayState extends FlxState
 			door.kill();
 		}
 
-		if(FlxG.mouse.justPressed) {
+		if(FlxG.mouse.pressed) {
 			//trace("X:" + FlxG.mouse.screenX + ", Y:" + FlxG.mouse.screenY);
 			var mouseVec = new Vector2(FlxG.mouse.screenX, FlxG.mouse.screenY);
 			hero.clearTargets();
