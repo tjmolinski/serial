@@ -8,14 +8,14 @@ import flixel.group.FlxTypedGroup;
 
 class PlayState extends FlxState
 {
-	var hero : Hero;
+	public var hero : Hero;
 	var victim : Victim;
 	var house : House;
 	var breakInto : Interactable;
 	var door : Interactable;
 	var meshMap : Array<NavMesh>;
 	var objective : FlxText;
-	var container : FlxTypedGroup<ExtendedSprite>;
+	public var container : FlxTypedGroup<ExtendedSprite>;
 
 	override public function create():Void
 	{
@@ -43,25 +43,25 @@ class PlayState extends FlxState
 
 		hero = new Hero(550, 370);
 		hero.currentMesh = meshMap[1];
-		hero.z = -2;
+		hero._z = -2;
 		container.add(hero);
 
 		victim = new Victim(180, 204);
 		victim.addTarget(new Vector2(80, 203));
 		victim.addTarget(new Vector2(180, 204));
-		victim.z = -1;
+		victim._z = -1;
 		container.add(victim);
 
-		house = new House(-70, -80);
-		house.z = 5;
+		house = new House(-200, 100);
+		house._z = 5;
 		container.add(house);
 
 		breakInto = new Interactable("images/Interactable.png", 210, 150, onBreakIntoClick);
-		breakInto.z = -5;
+		breakInto._z = -5;
 		container.add(breakInto);
 
 		door = new Interactable("images/door.png", 125, 125, onEnterDoorway);
-		breakInto.z = 0;
+		breakInto._z = 0;
 		container.add(door);
 
 		container.sort(sortByZ);
@@ -75,12 +75,12 @@ class PlayState extends FlxState
 	}
 
 	private function sortByZ(order : Int, sprite1 : ExtendedSprite, sprite2 : ExtendedSprite) : Int {
-		return FlxSort.byValues(order, sprite1.z, sprite2.z);
+		return FlxSort.byValues(order, sprite1._z, sprite2._z);
 	}
 
 	private function onBreakIntoClick() : Void {
 		house.breakInto();
-		house.z = -5;
+		house._z = -5;
 		container.sort(sortByZ);
 		addHouseNav();
 		breakInto.kill();
@@ -165,6 +165,9 @@ class PlayState extends FlxState
 
 		if(FlxG.mouse.pressed) {
 			//trace("X:" + FlxG.mouse.screenX + ", Y:" + FlxG.mouse.screenY);
+			var mousePoint = new Vector2(FlxG.mouse.screenX, FlxG.mouse.screenY);
+			var test = Vector2.getClosestPoint(new Vector2(10, 390), new Vector2(390,390), mousePoint);
+			trace(test.x + " " + test.y);
 			var mouseVec = new Vector2(FlxG.mouse.screenX, FlxG.mouse.screenY);
 			hero.clearTargets();
 			var desiredMesh : NavMesh = findNavMesh(mouseVec);

@@ -1,18 +1,28 @@
 package;
 
 import flixel.*;
+import flixel.text.*;
 
 class Victim extends Character {
 	public var targets : Array<Vector2> = new Array<Vector2>();
 	public var targetIdx : Int = 0;
+	var noise : SoundVfx;
 
 	public function new(newX : Int, newY : Int) {
 		super(newX, newY);
+		noise = new SoundVfx("images/tap.png", 0, 0);
+		cast(FlxG.state, PlayState).container.add(noise);
 	}
 
 	override public function update() {
 		var currentTarget = targets[targetIdx];
 		var speed = 25.0;
+
+		if(animation.curAnim.curFrame == 0) {
+			noise.alpha = 1;
+			noise.x = cast(x, Int);
+		        noise.y = cast(y, Int);
+		}
 
 		if(currentTarget != null) {
 			if(x < currentTarget.x) {
