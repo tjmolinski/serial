@@ -92,6 +92,39 @@ class PlayState extends FlxState
 		meshMap[0].addNeighbor(meshMap[1], new Vector2(390, 385), 1);
 		meshMap[1].addNeighbor(meshMap[0], new Vector2(390, 385), 0);
 	}
+
+	public function getClosestNavMesh(coord : Vector2) : Vector2 {
+		var closest : Float;
+		var desiredPoint : Vector2 = new Vector2(0, 0);
+		//TODO: Clean this shit up
+		for(i in 0...meshMap.length) {
+			var points = meshMap[i].points;
+			var a = Vector2.getClosestPoint(points[0], points[1], coord);
+			var b = Vector2.getClosestPoint(points[0], points[2], coord);
+			var c = Vector2.getClosestPoint(points[3], points[1], coord);
+			var d = Vector2.getClosestPoint(points[3], points[2], coord);
+			var distA = Vector2.getDistance(a, coord);
+			var distB = Vector2.getDistance(b, coord);
+			var distC = Vector2.getDistance(c, coord);
+			var distD = Vector2.getDistance(d, coord);
+			closest = distA;
+			desiredPoint = a;
+			if(closest > distB) {
+				closest = distB;
+				desiredPoint = b;
+			}
+			if(closest > distC) {
+				closest = distC;
+				desiredPoint = c;
+			}
+			if(closest > distD) {
+				closest = distD;
+				desiredPoint = d;
+			}
+		}
+		//trace(desiredPoint.x + " " + desiredPoint.y);
+		return desiredPoint;
+	}
 	
 	public function findNavMesh(coord : Vector2) : NavMesh {
 		for(i in 0...meshMap.length) {
@@ -161,9 +194,15 @@ class PlayState extends FlxState
 			//trace(test.x + " " + test.y);
 			var mouseVec = new Vector2(FlxG.mouse.screenX, FlxG.mouse.screenY);
 			hero.clearTargets();
-			var desiredMesh : NavMesh = findNavMesh(mouseVec);
+			var desiredPoint : Vector2 = mouseVec;
+			var desiredMesh : NavMesh = findNavMesh(desiredPoint);
+			if(desiredMesh == null) {
+				desiredPoint = getClosestNavMesh(mouseVec);
+				desiredMesh = findNavMesh(desiredPoint);
+			}
+
 			if(hero.currentMesh == desiredMesh) {
-				hero.addTarget(desiredMesh, mouseVec);
+				hero.addTarget(desiredMesh, desiredPoint);
 			} else {
 				findDesiredPath();
 				var current = desiredMesh;
@@ -178,7 +217,7 @@ class PlayState extends FlxState
 					hero.addTarget(current, current.neighbors.get(current.parent));
 					current = current.parent;
 				}
-				hero.addTarget(desiredMesh, mouseVec);
+				hero.addTarget(desiredMesh, desiredPoint);
 			}
 		}
 		super.update();

@@ -7,7 +7,7 @@ import flash.display.*;
 
 class NavMesh extends FlxObject {
 
-	private var points : Array<Vector2>;
+	public var points : Array<Vector2>;
 	public var canvas : Graphics;
 	public var shape : Shape;
 	public var neighbors : Map<NavMesh, Vector2> = new Map<NavMesh, Vector2>();
@@ -66,8 +66,8 @@ class NavMesh extends FlxObject {
 		var i : Int = 0;
 		var j : Int = length-1;
 		while(i < length) {
-			if((((points[i].y <= target.y) && (target.y < points[j].y)) ||
-				((points[j].y <= target.y) && (target.y < points[i].y))) &&
+			if((((points[i].y <= target.y) && (target.y <= points[j].y)) ||
+				((points[j].y <= target.y) && (target.y <= points[i].y))) &&
 				(target.x < (points[j].x - points[i].x) * (target.y - points[i].y) / (points[j].y - points[i].y) + points[i].x)) {
 				inside = !inside;
 			}
