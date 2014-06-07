@@ -25,30 +25,20 @@ class PlayState extends FlxState
 		container = new FlxTypedGroup<ExtendedSprite>();
 
 		var points = new Array<Vector2>();
-		points.push(new Vector2(210, 190));
-		points.push(new Vector2(500, 190));
-		points.push(new Vector2(500, 220));
-		points.push(new Vector2(210, 220));
+	       	points.push(new Vector2(390, 380));
+		points.push(new Vector2(620, 380));
+		points.push(new Vector2(620, 390));
+		points.push(new Vector2(390, 390));
 		meshMap.push(new NavMesh(points));
-
-		points = new Array<Vector2>();
-		points.push(new Vector2(510, 190));
-		points.push(new Vector2(620, 190));
-		points.push(new Vector2(620, 400));
-		points.push(new Vector2(510, 400));
-		meshMap.push(new NavMesh(points));
-
-		meshMap[0].addNeighbor(meshMap[1], new Vector2(505, 210), 1);
-		meshMap[1].addNeighbor(meshMap[0], new Vector2(505, 210), 0);
 
 		hero = new Hero(550, 370);
-		hero.currentMesh = meshMap[1];
+		hero.currentMesh = meshMap[0];
 		hero._z = -2;
 		container.add(hero);
 
-		victim = new Victim(180, 204);
-		victim.addTarget(new Vector2(80, 203));
-		victim.addTarget(new Vector2(180, 204));
+		victim = new Victim(15, 385);
+		victim.addTarget(new Vector2(15, 385));
+		victim.addTarget(new Vector2(380, 385));
 		victim._z = -1;
 		container.add(victim);
 
@@ -56,11 +46,11 @@ class PlayState extends FlxState
 		house._z = 5;
 		container.add(house);
 
-		breakInto = new Interactable("images/Interactable.png", 210, 150, onBreakIntoClick);
+		breakInto = new Interactable("images/Interactable.png", 400, 310, onBreakIntoClick);
 		breakInto._z = -5;
 		container.add(breakInto);
 
-		door = new Interactable("images/door.png", 125, 125, onEnterDoorway);
+		door = new Interactable("images/door.png", 180, 280, onEnterDoorway);
 		breakInto._z = 0;
 		container.add(door);
 
@@ -93,13 +83,14 @@ class PlayState extends FlxState
 
 	public function addHouseNav() : Void {
 		var points = new Array<Vector2>();
-		points.push(new Vector2(50, 190));
-		points.push(new Vector2(210, 190));
-		points.push(new Vector2(210, 220));
-		points.push(new Vector2(50, 220));
+		points.push(new Vector2(10, 380));
+		points.push(new Vector2(10, 390));
+		points.push(new Vector2(390, 390));
+		points.push(new Vector2(390, 380));
 		meshMap.push(new NavMesh(points));
-		meshMap[0].addNeighbor(meshMap[2], new Vector2(210, 210), 1);
-		meshMap[2].addNeighbor(meshMap[0], new Vector2(210, 210), 1);
+
+		meshMap[0].addNeighbor(meshMap[1], new Vector2(390, 385), 1);
+		meshMap[1].addNeighbor(meshMap[0], new Vector2(390, 385), 0);
 	}
 	
 	public function findNavMesh(coord : Vector2) : NavMesh {
@@ -157,7 +148,7 @@ class PlayState extends FlxState
 				breakInto.kill();
 			}
 		}
-		if(getDistance(door.x, door.y, hero.x, hero.y) < 75.0) {
+		if(getDistance(door.x, door.y, hero.x, hero.y) < 125.0) {
 			door.revive();
 		} else {
 			door.kill();
@@ -165,9 +156,9 @@ class PlayState extends FlxState
 
 		if(FlxG.mouse.pressed) {
 			//trace("X:" + FlxG.mouse.screenX + ", Y:" + FlxG.mouse.screenY);
-			var mousePoint = new Vector2(FlxG.mouse.screenX, FlxG.mouse.screenY);
-			var test = Vector2.getClosestPoint(new Vector2(10, 390), new Vector2(390,390), mousePoint);
-			trace(test.x + " " + test.y);
+			//var mousePoint = new Vector2(FlxG.mouse.screenX, FlxG.mouse.screenY);
+			//var test = Vector2.getClosestPoint(new Vector2(10, 390), new Vector2(390,390), mousePoint);
+			//trace(test.x + " " + test.y);
 			var mouseVec = new Vector2(FlxG.mouse.screenX, FlxG.mouse.screenY);
 			hero.clearTargets();
 			var desiredMesh : NavMesh = findNavMesh(mouseVec);
